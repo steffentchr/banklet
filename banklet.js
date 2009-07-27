@@ -3,9 +3,9 @@
 // javascript:void(function(){var%20s=document.createElement('script');s.src='http://refresh.dk/bank/banklet.js';document.getElementsByTagName('head')[0].appendChild(s);}())
 
 // Insert jQuery
-    var s = document.createElement('script');
-    s.src='http://code.jquery.com/jquery-latest.js';
-    document.getElementsByTagName('head')[0].appendChild(s);
+var s = document.createElement('script');
+s.src='http://code.jquery.com/jquery-latest.js';
+document.getElementsByTagName('head')[0].appendChild(s);
 
 try {
     // Testing stuff
@@ -19,16 +19,14 @@ try {
             test_bank: function(){var d=this._doc(); return(d && new RegExp('JyskeNetbank').test($('frameset').get(0).innerHTML));},
             test_page: function(){var d=this._doc(); return($(d).find('table.DataTable tr td').length>0);},
             account_name: function(){
-                var d = this._doc(); 
                 var account_name = '';
-                $($(d).find('select').get(0).options).each(function(){
+                $($(this._doc()).find('select').get(0).options).each(function(){
                         if(this.selected) account_name = this.innerHTML.substring(14);
                     });
                 return(account_name);
             },
             transactions: function(){
-                var d=this._doc();
-                var items = $(d).find('table.DataTable tbody tr');
+                var items = $(this._doc()).find('table.DataTable tbody tr');
                 var tx = [];
                 $.each(items, function(){
                         var values = $(this).find('td');
@@ -51,20 +49,18 @@ try {
             // Bank: Nordea, http://www.netbank.nordea.dk
             // Maintainer: steffen@refresh.dk
             bank_name: 'Nordea',
-            _frame:function(){var ret; $('frame').each(function(){if ($(this).attr('name').indexOf('content')==0) ret=this;}); return(ret);},
-            test_bank: function(){var f = this._frame(); return(f && f.contentDocument && $(f.contentDocument).find('body.ContentBGcolor').length);},
-            test_page: function(){var f = this._frame(); return(f && f.contentDocument && $(f.contentDocument).find('body.ContentBGcolor table.LeftmenuFaneQuickFix tr.tableBody').length);},
+            _doc:function(){var ret; $('frame').each(function(){if ($(this).attr('name').indexOf('content')==0) ret=this.contentDocument;}); return(ret);},
+            test_bank: function(){var d = this._doc(); return(d && $(d).find('body.ContentBGcolor').length);},
+            test_page: function(){var d = this._doc(); return(d && $(d).find('body.ContentBGcolor table.LeftmenuFaneQuickFix tr.tableBody').length);},
             account_name: function(){
-                var f = this._frame(); 
                 var account_name = '';
-                $($(f.contentDocument).find('select').get(0).options).each(function(){
+                $($(this._doc()).find('select').get(0).options).each(function(){
                         if(this.selected) account_name = this.innerHTML.substring(0,this.innerHTML.length-13);
                     });
                 return(account_name);
             },
             transactions: function(){
-                var f = this._frame(); 
-                var items = $(f.contentDocument).find('table.LeftmenuFaneQuickFix tr.tableBody, table.LeftmenuFaneQuickFix tr.tableBodywhite');
+                var items = $(this._doc()).find('table.LeftmenuFaneQuickFix tr.tableBody, table.LeftmenuFaneQuickFix tr.tableBodywhite');
                 var tx = [];
                 $.each(items, function(){
                         var values = $(this).find('td');
@@ -86,12 +82,14 @@ try {
       ];
 
     var match = false;          
+    var success = false;          
     $.each(banks, function(){
             if(this.test_bank()) {
                 match = true;
                 // Right bank
                 if(this.test_page()) {
-                    data = {account_name:this.account_name(), bank_name:this.bank_name, success:true, transactions:this.transactions()};
+                    data = {account_name:this.account_name(), bank_name:this.bank_name, transactions:this.transactions()};
+                    success = true;
                     console.debug(data);
                 } else {
                     console.debug('Not right page for ' + this.bank_name);
@@ -100,7 +98,7 @@ try {
             }
         });
     if (match) {
-        if (data.success) {}
+        if (success) {}
     } else {
         console.debug('Nothing known about this bank or webpage.');
     }
