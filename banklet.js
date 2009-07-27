@@ -9,7 +9,7 @@ document.getElementsByTagName('head')[0].appendChild(s2);
 
 try {
     // Testing stuff
-    var data = {success:false, account_name:'', transactions:[]};
+    var data = {bank_name:'', account_name:'', transactions:[]};
     var banks = [
         {
             // Bank: Jyske Bank, http://www.jyskenetbank.dk
