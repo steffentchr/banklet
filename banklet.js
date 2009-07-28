@@ -1,10 +1,10 @@
 // Banklet, http://github.com/steffentchr/banklet
 // Code for bookmarklet:
-// javascript:void(function(){var%20s=document.createElement('script');s.src='http://refresh.dk/bank/banklet.js';document.getElementsByTagName('head')[0].appendChild(s);}())
+// javascript:void(function(){var%20s=document.createElement('script');s.src='http://bank.labs.refresh.dk/resources/banklet/banklet.js';document.getElementsByTagName('head')[0].appendChild(s);}())
 
 // Insert jQuery
 var s2 = document.createElement('script');
-s2.src='http://code.jquery.com/jquery-latest.js';
+s2.src='http://bank.labs.refresh.dk/resources/jquery/jquery.js';
 document.getElementsByTagName('head')[0].appendChild(s2);
 
 try {
@@ -86,7 +86,7 @@ try {
                 if ($("frame[name='main']").length) {
                     // BEC is tricky since the user's bank is embedding the web bank service in a frame from a different service domain.
                     // This means that we won't have access to the dom in the content frame -- simply because we don't have access to the domain
-                    // Instead, we'll need to the user to open up the frame in 
+                    // Instead, we'll need to the user to open up the frame in
                     f = $("frame[name='main']").get(0);
                     if (f && new RegExp('bec.dk').test(f.src)) {
                         alert("Du bruger " + $('title').text() + ", som er en netbank fra BEC.\n\nFor at hente data ud med banklet, skal du højreklikke på tabellen med posteringer, vælge menupunktet 'Denne ramme' efterfulgt af 'Vis kun denne ramme'.\n\nSkærmbilledet skifter nu, og du vil derefter muligvis blive bedt om at logge ind igen. Når du igen ser listen over posteringer, kan du trykke på denne importeringsknap igen.");
@@ -130,8 +130,8 @@ try {
 
       ];
 
-    var match = false;          
-    var success = false;          
+    var match = false;
+    var success = false;
     $.each(banks, function(){
             if(this.test_bank()) {
                 match = true;
